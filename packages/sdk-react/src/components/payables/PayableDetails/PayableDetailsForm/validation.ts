@@ -54,7 +54,7 @@ export const getPayableDetailsValidationSchema = (
       }),
   });
 
-  const tagSchema: z.ZodType<components['schemas']['TagReadSchema']> = z.object({
+  const tagSchema = z.object({
     id: z.string(),
     created_at: z.string(),
     updated_at: z.string(),
@@ -66,7 +66,7 @@ export const getPayableDetailsValidationSchema = (
       "vendor_type",
       "payment_method",
       "approval_status"
-    ] as [components['schemas']['TagCategory'], ...components['schemas']['TagCategory'][]]).optional(),
+    ]).optional(),
     created_by_entity_user_id: z.string().optional(),
     description: z.string().optional(),
     name: z.string(),
@@ -94,7 +94,7 @@ export const getPayableDetailsValidationSchema = (
     dueDate: z.date()
       .optional(),
     
-    currency: z.enum(CurrencyEnum as [string, ...string[]])
+    currency: z.enum(CurrencyEnum as [components['schemas']['CurrencyEnum'], ...components['schemas']['CurrencyEnum'][]])
       .meta({ 
         title: t(i18n)`Invoice currency`,
         description: t(i18n)`Currency for the invoice amount`,
@@ -109,6 +109,8 @@ export const getPayableDetailsValidationSchema = (
     lineItems: z.array(lineItemSchema),
     
     tags: z.array(tagSchema),
+
+    counterpartAddressId: z.string().optional(),
   });
 
   return baseSchema

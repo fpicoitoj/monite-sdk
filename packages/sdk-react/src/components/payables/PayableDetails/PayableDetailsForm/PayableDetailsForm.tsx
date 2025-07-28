@@ -686,9 +686,10 @@ const PayableDetailsFormBase = forwardRef<
                                       error={Boolean(error)}
                                       sx={{ width: 150 }}
                                       InputProps={{
-                                        endAdornment: getSymbolFromCurrency(
-                                          currentCurrency
-                                        ),
+                                        endAdornment:
+                                          getSymbolFromCurrency(
+                                            currentCurrency
+                                          ),
                                       }}
                                     />
                                   )}
