@@ -25,7 +25,7 @@ import { useCreateInvoiceProductsTable } from '../../components/useCreateInvoice
 import { sanitizeLineItems, type SanitizableLineItem } from '../../utils';
 import styles from './InvoicePreviewLegacy.module.css';
 
-export const InvoicePreview = ({
+export const InvoicePreviewLegacy = ({
   address,
   counterpart,
   counterpartVats,
