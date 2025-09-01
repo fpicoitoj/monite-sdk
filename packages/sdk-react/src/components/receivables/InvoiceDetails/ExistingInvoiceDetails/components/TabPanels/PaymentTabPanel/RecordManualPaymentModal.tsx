@@ -15,6 +15,8 @@ import {
   DialogContent,
 } from '@mui/material';
 
+import { toMinorUnits } from '@/core/utils/currency';
+
 import { ManualPaymentRecordDetails } from './ManualPaymentRecordDetails';
 import {
   PaymentRecordForm,
@@ -60,7 +62,7 @@ export const RecordManualPaymentModal = ({ children, invoice }: Props) => {
   const showConfirmation = (data: PaymentRecordFormValues) => {
     setFormValues({ 
       ...data, 
-      amount: (data?.amount ?? 0) * 100,
+      amount: toMinorUnits(data?.amount ?? 0),
       created_by: user?.id ?? '',
     });
     setConfirmSubmission(true);
