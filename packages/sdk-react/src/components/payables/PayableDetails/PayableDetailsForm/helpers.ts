@@ -10,6 +10,10 @@ import {
 } from '@/components/payables/types';
 import { CounterpartResponse } from '@/core/queries';
 import { getIndividualName } from '@/core/utils';
+import { 
+  toMinorUnits, 
+  fromMinorUnits 
+} from '@/core/utils/currency';
 import { format } from 'date-fns';
 import { FieldValue, FieldValues } from 'react-hook-form';
 import type { PayableDetailsFormFields } from './validation';
@@ -59,7 +63,7 @@ export const dateToString = (date: Date): string => {
 export const prepareDefaultValues = (
   formatFromMinorUnits: (
     amount: number,
-    currency: CurrencyEnum | string
+    currency: CurrencyEnum
   ) => number | null,
   payable?: PayableResponseSchema,
   lineItems?: LineItemResponse[]
@@ -106,7 +110,7 @@ export const prepareDefaultValues = (
     currency: currency ?? 'EUR',
     tags: tags ?? [],
     discount:
-      discount && currency ? formatFromMinorUnits(discount, currency) : null,
+      discount && currency ? formatFromMinorUnits(discount, currency as CurrencyEnum) : null,
     lineItems: (lineItems || []).map((lineItem) => {
       return {
         id: lineItem.id ?? '',
@@ -114,7 +118,7 @@ export const prepareDefaultValues = (
         quantity: lineItem.quantity ?? 1,
         price:
           lineItem.unit_price && currency
-            ? (formatFromMinorUnits(lineItem.unit_price, currency) ?? 0)
+            ? (formatFromMinorUnits(lineItem.unit_price, currency as CurrencyEnum) ?? 0)
             : 0,
         tax: lineItem.tax ? formatTaxFromMinorUnits(lineItem.tax) : 0,
       };
@@ -134,7 +138,7 @@ export const prepareSubmit = (
     tags,
     counterpartAddressId,
   }: SubmitPayload,
-  formatToMinorUnits: (amount: number, currency: string) => number | null
+  formatToMinorUnits: (amount: number, currency: CurrencyEnum) => number | null
 ): PayableUpdateSchema => ({
   document_id: invoiceNumber,
   discount:
@@ -201,7 +205,7 @@ export const calculateTotalsForPayable = (
 export const prepareLineItemSubmit = (
   currency: CurrencyEnum,
   lineItem: LineItem,
-  formatToMinorUnits: (amount: number, currency: string) => number | null
+  formatToMinorUnits: (amount: number, currency: CurrencyEnum) => number | null
 ): LineItemRequest => {
   const { name, quantity, price, tax } = lineItem;
 
@@ -214,11 +218,11 @@ export const prepareLineItemSubmit = (
 };
 
 function formatTaxToMinorUnits(tax: number): number {
-  return tax * 100;
+  return toMinorUnits(tax);
 }
 
 function formatTaxFromMinorUnits(tax: number): number {
-  return tax / 100;
+  return fromMinorUnits(tax);
 }
 
 export const isFieldRequired = <TFieldValues extends FieldValues>(
